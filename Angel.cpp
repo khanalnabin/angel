@@ -1,11 +1,29 @@
 #include "Angel.hpp"
-#include "Line.hpp"
-#include "ResourceManager.hpp"
+#include <glad/glad.h>
+#include <iostream>
 
 int Angel::m_width = 1280;
 int Angel::m_height = 720;
 
 unsigned int Angel::m_ID = 0;
+unsigned int Angel::m_shader_ID = 0;
+
+const char *vertexShaderSource = R"glsl(
+#version 330 core
+layout (location = 0) in vec3 aPos;
+void main(){
+gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+)glsl";
+
+const char *fragmentShaderSource = R"glsl(
+#version 330 core
+out vec4 FragColor;
+uniform vec4 color;
+void main(){
+FragColor = vec4(color);
+}
+)glsl";
 
 void Angel::init(unsigned int width = Angel::m_width,
                  unsigned int height = Angel::m_height) {
@@ -34,17 +52,49 @@ void Angel::init(unsigned int width = Angel::m_width,
 	m_width = width;
 	m_height = height;
 	glBindVertexArray(0);
-	ResourceManager::LoadShader("res/shaders/pixel/vertex.glsl",
-	                            "res/shaders/pixel/fragment.glsl", "pixel");
+	// setup vertex shader
+	unsigned int vertexShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
+	glCompileShader(vertexShader);
+
+	// check compilation status of vertex shader
+	int success;
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		throw "Failed to compile Verted Shader";
+	}
+
+	// setup fragment shader
+	unsigned int fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
+	glCompileShader(fragmentShader);
+
+	// check compilation status of the fragment shader
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		throw "Failed to compile fragment shader!";
+	}
+
+	m_shader_ID = glCreateProgram();
+	glAttachShader(m_shader_ID, vertexShader);
+	glAttachShader(m_shader_ID, fragmentShader);
+	glLinkProgram(m_shader_ID);
+
+	glGetProgramiv(m_shader_ID, GL_LINK_STATUS, &success);
+	if (!success) {
+		throw "Unable to link shader program!";
+	}
 }
 
 void Angel::enable() {
 	glBindVertexArray(m_ID);
-	ResourceManager::GetShader("pixel").Bind();
+	glUseProgram(m_shader_ID);
 }
 
 void Angel::disable() {
-	ResourceManager::GetShader("pixel").Unbind();
+	glUseProgram(0);
 	glBindVertexArray(0);
 }
 
@@ -54,42 +104,20 @@ void Angel::setWidth(unsigned int width) { m_width = width; }
 unsigned int Angel::getHeight() { return m_height; }
 void Angel::setHeight(unsigned int height) { m_height = height; }
 
-oglm::vec2i Angel::map(const float &x, const float &y) {
-	int newX = round((x + 1.0f) * m_width / 2);
-	int newY = round((y + 1.0f) * m_height / 2);
-	return oglm::vec2i(newX, newY);
-}
-oglm::vec2 Angel::demap(const int &x, const int &y) {
-	float newX = x / (float)m_width * 2 - 1.0f;
-	float newY = y / (float)m_height * 2 - 1.0f;
-	return oglm::vec2(newX, newY);
-}
-
-oglm::vec2 Angel::demap(const oglm::vec2i &point) {
-	float newX = point.x / (float)m_width * 2 - 1.0f;
-	float newY = point.y / (float)m_height * 2 - 1.0f;
-	return oglm::vec2(newX, newY);
-}
-
-oglm::vec2i Angel::map(const oglm::vec2f &point) {
-	int newX = round((point.x + 1.0f) * m_width / 2);
-	int newY = round((point.y + 1.0f) * m_height / 2);
-	return oglm::vec2i(newX, newY);
-}
-
 void Angel::putPixel(float x, float y, int thickness, Color c) {
 	enable();
-	ResourceManager::GetShader("pixel").SetVec4("inColor",
-	                                            glm::vec4(c.r, c.g, c.b, c.a));
-	oglm::vec2i point = map(x, y);
+
+	int vertexColorLocation = glGetUniformLocation(m_shader_ID, "color");
+	glUniform4f(vertexColorLocation, c.r, c.g, c.b, c.a);
+
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(point.x, point.y, thickness, thickness);
+	glScissor(x, y, thickness, thickness);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisable(GL_SCISSOR_TEST);
 	disable();
 }
 
-void Angel::drawAxes(Color c, bool octant) {
+void Angel::drawAxes(Color c) {
 	for (float i = -1.0f; i <= 1.0f; i += 0.001f) {
 		putPixel(0, i, 1, c);
 		putPixel(i, 0, 1, c);

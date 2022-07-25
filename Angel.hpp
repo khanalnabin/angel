@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Color.hpp"
-#include "oglm.hpp"
-#include "IndexBuffer.hpp"
-#include "Shader.hpp"
-#include "VertexArray.hpp"
-#include "VertexBuffer.hpp"
-#include "VertexBufferLayout.hpp"
-#include "VertexBufferElement.hpp"
+struct Color {
+	float r, g, b, a;
+	Color(float _r, float _g, float _b) : r(_r), g(_g), b(_b), a(1.0f) {}
+	Color(float _r, float _g, float _b, float _a)
+	    : r(_r), g(_g), b(_b), a(_a) {}
+	Color() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) {}
+};
 
 class Angel {
   public:
@@ -15,24 +14,19 @@ class Angel {
 
 	static void init(unsigned int width, unsigned int height);
 
-	static void putPixel(float x, float y, int width = 1,
-	                     Color c = {1.0f, 1.0f, 1.0f, 1.0f});
+	static void putPixel(float x, float y, int width = 1, Color c = Color());
 
-	static void drawAxes(Color c = {1.0f, 1.0f, 1.0f, 1.0f},
-	                     bool octant = false);
+	static void drawAxes(Color c = Color());
 	static void enable();
 	static void disable();
 	static void setHeight(unsigned int height);
 	static void setWidth(unsigned int width);
 	static unsigned int getWidth();
 	static unsigned int getHeight();
-	static oglm::vec2i map(const float &x, const float &y);
-	static oglm::vec2f demap(const int &x, const int &y);
-	static oglm::vec2i map(const oglm::vec2 &point);
-	static oglm::vec2f demap(const oglm::vec2i &point);
 
   private:
 	static unsigned int m_ID;
+	static unsigned int m_shader_ID;
 	static Color m_color;
 	static int m_width;
 	static int m_height;
