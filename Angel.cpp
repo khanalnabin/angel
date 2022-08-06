@@ -104,22 +104,25 @@ void Angel::setWidth(unsigned int width) { m_width = width; }
 unsigned int Angel::getHeight() { return m_height; }
 void Angel::setHeight(unsigned int height) { m_height = height; }
 
-void Angel::putPixel(float x, float y, int thickness, Color c) {
+void Angel::putPixel(int x, int y, int thickness, Color c) {
 	enable();
 
 	int vertexColorLocation = glGetUniformLocation(m_shader_ID, "color");
 	glUniform4f(vertexColorLocation, c.r, c.g, c.b, c.a);
-
+	int mappedx = x + m_width / 2;
+	int mappedy = y + m_height / 2;
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(x, y, thickness, thickness);
+	glScissor(mappedx, mappedy, thickness, thickness);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisable(GL_SCISSOR_TEST);
 	disable();
 }
 
 void Angel::drawAxes(Color c) {
-	for (float i = -1.0f; i <= 1.0f; i += 0.001f) {
-		putPixel(0, i, 1, c);
+	for (int i = -m_width / 2; i != m_width / 2; i++) {
 		putPixel(i, 0, 1, c);
+	}
+	for (int i = -m_height / 2; i != m_height / 2; i++) {
+		putPixel(0, i, 1, c);
 	}
 }

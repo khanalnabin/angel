@@ -14,7 +14,7 @@ class Angel {
 
 	static void init(unsigned int width, unsigned int height);
 
-	static void putPixel(float x, float y, int width = 1, Color c = Color());
+	static void putPixel(int x, int y, int width = 1, Color c = Color());
 
 	static void drawAxes(Color c = Color());
 	static void enable();

@@ -46,7 +46,8 @@ int main() {
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		Angel::putPixel(100, 100, 10);
+		Angel::drawAxes();
+		Angel::putPixel(0, 0, 10);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
