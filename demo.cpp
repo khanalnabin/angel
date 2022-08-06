@@ -5,8 +5,9 @@
 
 #include "Angel.hpp"
 
-const int WIDTH = 800;
-const int HEIGHT = 800;
+int WIDTH = 800;
+int HEIGHT = 800;
+
 void handleInput(GLFWwindow *window);
 void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 
@@ -53,8 +54,8 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		Angel::drawAxes();
 		for (int i = (-WIDTH / 2); i <= WIDTH / 2; i++) {
-			float radians =
-			    -M_PI + (i + (float)WIDTH / 2) / ((float)WIDTH) * (M_PI * 2);
+			float radians = -2 * M_PI + (i + (float)WIDTH / 2) /
+			                                ((float)WIDTH) * (M_PI * 2 * 2);
 			Angel::putPixel(i, 100 * sin(radians), Color(1.0f, 0.0f, 0.0f));
 			Angel::putPixel(i, 100 * cos(radians), Color(0.0f, 1.0f, 0.0f));
 			Angel::putPixel(i, 100 * tan(radians), Color(0.0f, 0.0f, 1.0f));
@@ -69,6 +70,8 @@ void handleInput(GLFWwindow *window) {
 		glfwSetWindowShouldClose(window, true);
 }
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
+	WIDTH = width;
+	HEIGHT = height;
 	glViewport(0, 0, width, height);
 	Angel::setWidth(width);
 	Angel::setHeight(height);
