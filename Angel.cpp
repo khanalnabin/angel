@@ -2,8 +2,8 @@
 #include <glad/glad.h>
 #include <iostream>
 
-int Angel::m_width = 1280;
-int Angel::m_height = 720;
+int Angel::m_width = 800;
+int Angel::m_height = 800;
 
 unsigned int Angel::m_ID = 0;
 unsigned int Angel::m_shader_ID = 0;
@@ -105,7 +105,6 @@ unsigned int Angel::getHeight() { return m_height; }
 void Angel::setHeight(unsigned int height) { m_height = height; }
 
 void Angel::putPixel(int x, int y, int thickness, Color c) {
-
 	enable();
 	int vertexColorLocation = glGetUniformLocation(m_shader_ID, "color");
 	glUniform4f(vertexColorLocation, c.r, c.g, c.b, c.a);
@@ -116,6 +115,14 @@ void Angel::putPixel(int x, int y, int thickness, Color c) {
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisable(GL_SCISSOR_TEST);
 	disable();
+}
+void Angel::putPixel(int x, int y) {
+	putPixel(x, y, 1, Color(1.0f, 1.0f, 1.0f));
+}
+void Angel::putPixel(int x, int y, Color c) { putPixel(x, y, 1, c); }
+
+void Angel::putPixel(int x, int y, int t) {
+	putPixel(x, y, t, Color(1.0f, 1.0f, 1.0f));
 }
 
 void Angel::drawAxes(Color c) {
