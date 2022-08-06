@@ -1,9 +1,12 @@
 #include "glad.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <cmath>
 
 #include "Angel.hpp"
 
+const int WIDTH = 800;
+const int HEIGHT = 800;
 void handleInput(GLFWwindow *window);
 void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 
@@ -23,7 +26,7 @@ int main() {
 
 	// create a window
 	GLFWwindow *window =
-	    glfwCreateWindow(600, 600, "opengl-triangle", NULL, NULL);
+	    glfwCreateWindow(WIDTH, HEIGHT, "opengl-triangle", NULL, NULL);
 	if (window == NULL) {
 		std::cout << "Failed to create window!" << std::endl;
 		return -1;
@@ -41,7 +44,7 @@ int main() {
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
 	// setup Angel
-	Angel::init(600, 600);
+	Angel::init(WIDTH, HEIGHT);
 
 	while (!glfwWindowShouldClose(window)) {
 		handleInput(window);
@@ -49,7 +52,13 @@ int main() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		Angel::drawAxes();
-		Angel::putPixel(0, 0, 10);
+		for (int i = (-WIDTH / 2); i <= WIDTH / 2; i++) {
+			float radians =
+			    -M_PI + (i + (float)WIDTH / 2) / ((float)WIDTH) * (M_PI * 2);
+			Angel::putPixel(i, 100 * sin(radians), Color(1.0f, 0.0f, 0.0f));
+			Angel::putPixel(i, 100 * cos(radians), Color(0.0f, 1.0f, 0.0f));
+			Angel::putPixel(i, 100 * tan(radians), Color(0.0f, 0.0f, 1.0f));
+		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
