@@ -105,8 +105,8 @@ unsigned int Angel::getHeight() { return m_height; }
 void Angel::setHeight(unsigned int height) { m_height = height; }
 
 void Angel::putPixel(int x, int y, int thickness, Color c) {
-	enable();
 
+	enable();
 	int vertexColorLocation = glGetUniformLocation(m_shader_ID, "color");
 	glUniform4f(vertexColorLocation, c.r, c.g, c.b, c.a);
 	int mappedx = x + m_width / 2;

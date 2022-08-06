@@ -38,6 +38,8 @@ int main() {
 	}
 	std::cout << "Loaded GLAD." << std::endl;
 
+	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+
 	// setup Angel
 	Angel::init(600, 600);
 
@@ -59,4 +61,6 @@ void handleInput(GLFWwindow *window) {
 }
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
 	glViewport(0, 0, width, height);
+	Angel::setWidth(width);
+	Angel::setHeight(height);
 }
