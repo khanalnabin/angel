@@ -15,5 +15,9 @@ add_library(glad ${VENDOR_SOURCES})
 add_library(angel ${PROJECT_SOURCES} ${PROJECT_HEADERS})
 target_link_libraries(angel glad)
 
+option(ANGEL_BUILD_DEMO "Build the demo files" ON)
+
+if(ANGEL_BUILD_DEMO)
 add_executable(demo examples/demo.cpp)
 target_link_libraries(demo angel glad glfw)
+endif()
