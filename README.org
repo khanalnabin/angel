@@ -1,5 +1,6 @@
 * Angel
   Angel is a static graphics library to emulate graphics.h putpixel function.
+
 ** Build Instruction
 #+begin_src bash
 mkdir build
@@ -8,3 +9,7 @@ cmake ..
 make
 ./demo
 #+end_src
+
+** How to use? 
+Angel can be included in any project using git submodule.
+You can use add_subdirectory to use this library using cmake.
