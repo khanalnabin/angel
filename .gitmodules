@@ -1,4 +1,0 @@
-[submodule "lib/glad"]
-	path = lib/glad
-	url = git@github.com:Dav1dde/glad.git
-	branch = c
