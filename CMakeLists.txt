@@ -12,5 +12,8 @@ file(GLOB PROJECT_SOURCES src/*.cpp)
 
 add_library(glad ${VENDOR_SOURCES})
 
-add_library(angel ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${VENDOR_SOURCES})
+add_library(angel ${PROJECT_SOURCES} ${PROJECT_HEADERS})
 target_link_libraries(angel glad)
+
+add_executable(demo examples/demo.cpp)
+target_link_libraries(demo angel glad glfw)
