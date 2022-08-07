@@ -11,4 +11,5 @@ file(GLOB PROJECT_HEADERS include/*.hpp)
 file(GLOB PROJECT_SOURCES include/*.cpp)
 
 add_library(angel ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${VENDOR_SOURCES})
+set_target_properties(angel PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(angel ${GLAD_LIBRARIES})
