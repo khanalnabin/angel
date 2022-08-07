@@ -52,7 +52,17 @@ int main() {
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		// axes
 		Angel::drawAxes();
+
+		// octants
+		Angel::line(0, 0, WIDTH / 2, HEIGHT / 2);
+		Angel::line(0, 0, WIDTH / 2, -HEIGHT / 2);
+		Angel::line(0, 0, -WIDTH / 2, HEIGHT / 2);
+		Angel::line(0, 0, -WIDTH / 2, -HEIGHT / 2);
+
+		// sine, cosine and tangent curves
 		for (int i = (-WIDTH / 2); i <= WIDTH / 2; i++) {
 			float radians = -2 * M_PI + (i + (float)WIDTH / 2) /
 			                                ((float)WIDTH) * (M_PI * 2 * 2);

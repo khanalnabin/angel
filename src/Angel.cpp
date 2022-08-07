@@ -1,6 +1,7 @@
 #include "Angel.hpp"
 #include "glad/glad.h"
 #include <iostream>
+#include <cmath>
 
 int Angel::m_width = 800;
 int Angel::m_height = 800;
@@ -123,6 +124,52 @@ void Angel::putPixel(int x, int y, Color c) { putPixel(x, y, 1, c); }
 
 void Angel::putPixel(int x, int y, int t) {
 	putPixel(x, y, t, Color(1.0f, 1.0f, 1.0f));
+}
+
+void Angel::line(int x1, int y1, int x2, int y2) {
+	line(x1, y1, x2, y2, 1, Color(1.0f, 1.0f, 1.0f, 1.0f));
+}
+
+void Angel::line(int x1, int y1, int x2, int y2, int width) {
+	line(x1, y1, x2, y2, width, Color(1.0f, 1.0f, 1.0f, 1.0f));
+}
+
+void Angel::line(int x1, int y1, int x2, int y2, Color c) {
+	line(x1, y1, x2, y2, 1, c);
+}
+
+void Angel::line(int x1, int y1, int x2, int y2, int width, Color c) {
+	int delx = std::abs(x2 - x1);
+	int dely = std::abs(y2 - y1);
+	int a = 0, b = 0;
+	int p = 0;
+	a = ((x2 - x1) > 0) ? 1 : -1;
+	b = ((y2 - y1) > 0) ? 1 : -1;
+	if (delx > dely) {
+		p = 2 * dely - delx;
+		for (int i = 0; i <= delx; i++) {
+			putPixel(x1, y1, width, c);
+			x1 += a;
+			if (p <= 0)
+				p += 2 * dely;
+			else {
+				p += 2 * dely - 2 * delx;
+				y1 += b;
+			}
+		}
+	} else {
+		p = 2 * delx - dely;
+		for (int i = 0; i <= dely; i++) {
+			putPixel(x1, y1, width, c);
+			y1 += b;
+			if (p <= 0)
+				p += 2 * delx;
+			else {
+				p += 2 * delx - 2 * dely;
+				x1 += a;
+			}
+		}
+	}
 }
 
 void Angel::drawAxes(Color c) {
